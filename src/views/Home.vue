@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>TestssQSSSSQQssssQs</h1>
+    <h1>kupa</h1>
     <h1>Welcome, {{ name }}</h1>
     {{id}}
     <section class="linkSelection">
