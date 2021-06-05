@@ -1,30 +1,74 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+  <router-view></router-view>
 </template>
 
+
+<script>
+import{ onBeforeMount, ref } from 'vue'
+import { useRouter} from 'vue-router';
+import fire from '@/firebase';
+import { useStore } from 'vuex'
+
+
+export default {
+  setup() {
+
+    const router = useRouter();
+
+    // const route = useRoute();
+
+    const store = useStore()
+
+    const CurrenUser = ref({})
+
+    // watchEffect(()=> {
+    //   console.log('watch effect', store.state.WantedToGo);
+    // })
+
+    onBeforeMount(() => {
+      console.log(CurrenUser.value);
+      fire.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // store.state.CurrenUser = user
+          // router.push(store.state.WantedToGo)
+          store.commit('setIsLoggedIn', true)
+          store.commit('setAuthUser', user)
+          console.log('logged in', store.state.isLoggedIn);
+
+        }else {
+          // router.replace('/globalData');
+          // store.state.CurrenUser = user
+          router.push('/login')
+          store.commit('setIsLoggedIn', false)
+          store.commit('setAuthUser', user)
+          console.log('not logged in', store.state.isLoggedIn);
+          // CurrenUser.value = user
+          // }else if (route.path == '/login' || route.path == '/register'){
+          //   router.replace('/')
+        }
+      })
+    })
+
+    return {
+
+    }
+  }
+}
+</script>
+
 <style lang="scss">
+body {
+  background: #2c2c2c;
+  color: #FFF;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+}
+a {
+  color: inherit;
 }
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
 </style>
